@@ -1,1 +1,1 @@
-# json-tree-visualizer
+# JSON Tree Visualizer
