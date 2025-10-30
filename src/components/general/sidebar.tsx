@@ -1,11 +1,13 @@
 import { IconArrowRight } from '@tabler/icons-react';
 import { createContext, useContext, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { INITIAL_JSON_DATA } from '@/constants';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { generateTree } from '@/lib/generate-tree';
+import { useAppStoreActions } from '@/store/store';
 
 type SidebarContextState = {
   isSidebarOpen: boolean;
@@ -46,15 +48,16 @@ export function Sidebar() {
   const { isSidebarOpen } = useSidebarContext();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const [value, setValue] = useState(INITIAL_JSON_DATA);
+  const { setNodes, setEdges } = useAppStoreActions();
 
   function validateJSON() {
     try {
       const res = JSON.parse(value);
-      console.log('the res', res);
-      toast.success('JSON Parsed Successfully');
+      return res;
     } catch (err) {
       console.log('Error while parsing the JSON', err);
       toast.error('JSON Parsing Failed');
+      return null;
     }
   }
 
@@ -62,9 +65,9 @@ export function Sidebar() {
     <aside
       className={cn(
         'relative h-full border-r shrink-0 overflow-hidden',
-        'transition-all duration-300 ease-in-out',
-        isSidebarOpen ? 'w-[360px]' : 'w-0',
-        isMobile ? 'absolute' : 'relative',
+        'transition-all duration-300 ease-in-out bg-background',
+        isSidebarOpen ? 'w-[360px] opacity-100' : 'w-0 opacity-0',
+        isMobile ? 'absolute z-40' : 'relative',
       )}
     >
       <div
@@ -89,7 +92,15 @@ export function Sidebar() {
             <Button
               size="lg"
               className="w-full cursor-pointer"
-              onClick={validateJSON}
+              onClick={() => {
+                const res = validateJSON();
+
+                if (res) {
+                  const { nodes, edges } = generateTree(res);
+                  setNodes(nodes);
+                  setEdges(edges);
+                }
+              }}
             >
               <span>Visualize JSON</span>
               <IconArrowRight />

@@ -4,6 +4,8 @@ import App from '@/App.tsx';
 import { Providers } from '@/components/general/providers.tsx';
 import './index.css';
 
+import '@xyflow/react/dist/style.css';
+
 import '@fontsource/bricolage-grotesque/300.css';
 import '@fontsource/bricolage-grotesque/400.css';
 import '@fontsource/bricolage-grotesque/500.css';

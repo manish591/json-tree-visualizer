@@ -1,3 +1,4 @@
+import { Canvas } from '@/components/general/canvas';
 import { Header } from '@/components/general/header';
 import { Sidebar } from '@/components/general/sidebar';
 
@@ -8,7 +9,7 @@ export default function App() {
         <Header />
         <div className="relative rounded-b-sm flex-1 overflow-hidden w-full bg-background flex">
           <Sidebar />
-          {/* <NodesCanvas /> */}
+          <Canvas />
         </div>
       </div>
     </div>
