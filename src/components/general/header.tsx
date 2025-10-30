@@ -1,16 +1,15 @@
 import {
-	IconDownload,
 	IconLayoutSidebarLeftCollapse,
 	IconMoon,
 	IconRefresh,
 	IconSun,
 } from "@tabler/icons-react";
+import { ExportButton } from "@/components/general/export-btn";
+import { NodeSearch } from "@/components/general/node-search";
+import { useSidebarContext } from "@/components/general/sidebar";
+import { useTheme } from "@/components/general/theme-provider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useAppStoreActions } from "@/store/store";
-import { NodeSearch } from "./node-search";
-import { useSidebarContext } from "./sidebar";
-import { useTheme } from "./theme-provider";
 
 export function Header() {
 	const { theme, setTheme } = useTheme();
@@ -58,16 +57,7 @@ export function Header() {
 					>
 						{theme === "dark" ? <IconSun /> : <IconMoon />}
 					</Button>
-					<Button
-						size="sm"
-						variant="secondary"
-						className={cn(
-							"border border-primary/40 cursor-pointer rounded-lg px-3 text-sm",
-						)}
-					>
-						<IconDownload className="size-4" />
-						<span>Export</span>
-					</Button>
+					<ExportButton />
 				</div>
 			</div>
 		</header>
