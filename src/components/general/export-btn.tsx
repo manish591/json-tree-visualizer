@@ -42,7 +42,7 @@ export function ExportButton() {
       onClick={handleDownloadViewportImage}
     >
       <IconDownload className="size-4" />
-      <span>Export</span>
+      <span className="hidden lg:inline-block">Export</span>
     </Button>
   );
 }
