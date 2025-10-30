@@ -1,10 +1,21 @@
-import { IconChecks, IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
+import {
+  IconDownload,
+  IconLayoutSidebarLeftCollapse,
+  IconMoon,
+  IconRefresh,
+  IconSun,
+} from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSidebarContext } from './sidebar';
+import { useTheme } from './theme-provider';
+import { useAppStoreActions } from '@/store/store';
+import { NodeSearch } from './node-search';
 
 export function Header() {
+  const { theme, setTheme } = useTheme();
   const { openSidebar, isSidebarOpen } = useSidebarContext();
+  const { setNodes, setEdges } = useAppStoreActions();
 
   return (
     <header className="z-40 shrink-0 rounded-t-sm relative h-12 border-b flex items-center px-4 bg-background">
@@ -24,16 +35,40 @@ export function Header() {
             <span className="font-bold leading-none">JSON Tree Visualizer</span>
           </div>
         </div>
-        <Button
-          size="sm"
-          variant="secondary"
-          className={cn(
-            'border border-primary/40 cursor-pointer rounded-lg px-3 text-sm',
-          )}
-        >
-          <IconChecks className="size-4" />
-          <span>Save</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <NodeSearch />
+          <Button
+            size="icon-sm"
+            variant="outline"
+            className="cursor-pointer"
+            onClick={() => {
+              setNodes([]);
+              setEdges([]);
+            }}
+          >
+            <IconRefresh />
+          </Button>
+          <Button
+            size="icon-sm"
+            variant="outline"
+            className="cursor-pointer"
+            onClick={() => {
+              setTheme(theme === 'dark' ? 'light' : 'dark');
+            }}
+          >
+            {theme === 'dark' ? <IconSun /> : <IconMoon />}
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            className={cn(
+              'border border-primary/40 cursor-pointer rounded-lg px-3 text-sm',
+            )}
+          >
+            <IconDownload className="size-4" />
+            <span>Export</span>
+          </Button>
+        </div>
       </div>
     </header>
   );
