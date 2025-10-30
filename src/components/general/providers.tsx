@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 
 export function Providers({ children }: Readonly<PropsWithChildren>) {
   return (
-    <ThemeContextProvider defaultTheme="light">
+    <ThemeContextProvider defaultTheme="dark">
       <ReactFlowProvider>
         <SidebarContextProvider>{children}</SidebarContextProvider>
       </ReactFlowProvider>

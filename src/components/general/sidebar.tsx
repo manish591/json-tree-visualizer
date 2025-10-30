@@ -1,6 +1,6 @@
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react';
+import { validateJSON } from '@/lib/validate-json';
 import { createContext, useContext, useMemo, useState } from 'react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { INITIAL_JSON_DATA } from '@/constants';
@@ -48,18 +48,10 @@ export function Sidebar() {
   const { isSidebarOpen } = useSidebarContext();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const [value, setValue] = useState(INITIAL_JSON_DATA);
+  const [isValidJson, setIsValidJson] = useState<boolean>(
+    () => !!validateJSON(value),
+  );
   const { setNodes, setEdges } = useAppStoreActions();
-
-  function validateJSON() {
-    try {
-      const res = JSON.parse(value);
-      return res;
-    } catch (err) {
-      console.log('Error while parsing the JSON', err);
-      toast.error('JSON Parsing Failed');
-      return null;
-    }
-  }
 
   return (
     <aside
@@ -79,32 +71,65 @@ export function Sidebar() {
       >
         <div className="w-full h-full">
           <Textarea
-            className="rounded-none w-full h-full border-0 resize-none px-6 py-8"
+            className="rounded-none w-full h-full border-0 resize-none px-6 py-8 bg-transparent!"
             placeholder="Enter JSON Here"
             value={value}
             onChange={(e) => {
-              setValue(e.target.value);
+              const value = e.target.value;
+              const validationResult = validateJSON(value);
+              setValue(value);
+              setIsValidJson(!!validationResult);
             }}
           />
         </div>
         {value ? (
-          <div className="absolute bottom-6 w-full px-8">
-            <Button
-              size="lg"
-              className="w-full cursor-pointer"
-              onClick={() => {
-                const res = validateJSON();
+          <div className="absolute bottom-6 w-full px-4">
+            <div className="flex items-center justify-between bg-muted/60 px-4 py-3 rounded-md">
+              <div
+                className={cn(
+                  'flex items-center text-xs gap-1',
+                  isValidJson ? 'text-green-500' : 'text-destructive',
+                )}
+              >
+                {isValidJson ? (
+                  <IconCircleCheck className="size-4" />
+                ) : (
+                  <IconAlertCircle className="size-4" />
+                )}
+                <span className="mt-px">
+                  {isValidJson ? 'Valid Json' : 'Invalid Json'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs cursor-pointer"
+                  onClick={() => {
+                    setValue('');
+                    setIsValidJson(false);
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button
+                  size="sm"
+                  className="cursor-pointer h-7 text-xs"
+                  disabled={!isValidJson}
+                  onClick={() => {
+                    const res = validateJSON(value);
 
-                if (res) {
-                  const { nodes, edges } = generateTree(res);
-                  setNodes(nodes);
-                  setEdges(edges);
-                }
-              }}
-            >
-              <span>Visualize JSON</span>
-              <IconArrowRight />
-            </Button>
+                    if (res) {
+                      const { nodes, edges } = generateTree(res);
+                      setNodes(nodes);
+                      setEdges(edges);
+                    }
+                  }}
+                >
+                  <span>Visualize</span>
+                </Button>
+              </div>
+            </div>
           </div>
         ) : null}
       </div>

@@ -11,6 +11,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import type { NodeData } from '@/store/store';
+import { cn } from '@/lib/utils';
 
 export type JsonTypeNode = Node<NodeData, 'jsonTypeNode'>;
 
@@ -19,7 +20,14 @@ export function JsonTypeNode({ id, data }: NodeProps<JsonTypeNode>) {
 
   return (
     <BaseNode>
-      <BaseNodeHeader className="bg-chart-1/10 border border-chart-1/30">
+      <BaseNodeHeader
+        className={cn(
+          'bg-chart-3/20 border border-chart-3/40',
+          data.dataType === 'array' && 'bg-chart-1/20 border border-chart-1/40',
+          data.dataType === 'object' &&
+            'bg-chart-2/20 border border-chart-2/40',
+        )}
+      >
         <div className="flex items-baseline justify-center gap-3">
           <span className="text-[10px] font-bold font-mono">
             {data.dataType}

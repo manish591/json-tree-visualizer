@@ -5,12 +5,14 @@ import {
   useAppStoreEdges,
   useAppStoreNodes,
 } from '@/store/store';
+import { useTheme } from './theme-provider';
 
 export const nodeTypes: NodeTypes = {
   jsonTypeNode: JsonTypeNode,
 };
 
 export function Canvas() {
+  const { theme } = useTheme();
   const nodes = useAppStoreNodes();
   const edges = useAppStoreEdges();
   const { onNodesChange, onEdgesChange, onConnect } = useAppStoreActions();
@@ -24,6 +26,7 @@ export function Canvas() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        colorMode={theme}
       >
         <Background />
         <Controls />

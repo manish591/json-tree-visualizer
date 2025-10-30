@@ -9,7 +9,8 @@ export function BaseNode({
       className={cn(
         'relative rounded-md border bg-card text-card-foreground',
         'hover:ring-1 p-[5px] w-[250px]',
-        String.raw`[.react-flow\_\_node.selected_&]:border-muted-foreground`,
+        String.raw`[.react-flow\_\_node.selected_&]:border-primary`,
+        String.raw`[.react-flow\_\_node.selected_&]:border-2`,
         String.raw`[.react-flow\_\_node.selected_&]:shadow-lg`,
         className,
       )}
