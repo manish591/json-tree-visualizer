@@ -21,3 +21,9 @@ Open your browser and navigate to:
 ```http://localhost:5173
 ```
 
+## Live Demo
+Check out the live demo [here](https://json-tree-visualizer-ten-self.vercel.app/).
+
+## Made with ❤️ by Manish
+Portfolio: [https://manishdev.live](https://manishdev.live) |
+
