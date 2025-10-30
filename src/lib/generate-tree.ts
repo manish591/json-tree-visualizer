@@ -30,7 +30,7 @@ function getNodeDataType(data: JsonValue): string {
 	return typeof data;
 }
 
-export function generateTree(data: JsonValue, root: string | null = null) {
+export function generateTree(data: JsonValue, root: string | null = null, level = 1) {
 	let nodes: JsonTypeNode[] = [];
 	let edges: Edge[] = [];
 
@@ -39,8 +39,8 @@ export function generateTree(data: JsonValue, root: string | null = null) {
 			id: "$",
 			type: "jsonTypeNode",
 			position: {
-				x: 0,
-				y: 0,
+				x: 500,
+				y: 50,
 			},
 			data: {
 				key: "$",
@@ -53,28 +53,31 @@ export function generateTree(data: JsonValue, root: string | null = null) {
 		nodes = [...nodes, node];
 	}
 
+	let x = 100;
+
 	if (typeof data === "object" && data !== null) {
 		for (const key in data) {
 			const value = (data as JsonObject)[key];
+			const newKey = Array.isArray(data) ? `[${key}]` : key;
+			const parent = root ?? "$";
+			const currentNodeId = Array.isArray(data) ? `${parent}${newKey}` : `${parent}.${newKey}`;
 
 			if (typeof value === "object" && value !== null) {
 				const numChildren = Array.isArray(value)
 					? value.length
 					: Object.keys(value).length;
-				const parent = root ?? "$";
-				const currentNodeId = `${parent}.${key}`;
 				const dataType = Array.isArray(value) ? "array" : "object";
 
 				const node: JsonTypeNode = {
 					id: currentNodeId,
 					type: "jsonTypeNode",
 					position: {
-						x: 0,
-						y: 0,
+						x,
+						y: level * 150,
 					},
 					data: {
 						dataType,
-						key,
+						key: newKey,
 						value,
 						numChildren,
 					},
@@ -92,23 +95,22 @@ export function generateTree(data: JsonValue, root: string | null = null) {
 				const { nodes: newNodes, edges: newEdges } = generateTree(
 					value,
 					currentNodeId,
+					level + 1
 				);
 				nodes = [...nodes, ...newNodes];
 				edges = [...edges, ...newEdges];
 			} else {
-				const parent = root ?? "$";
-				const currentNodeId = `${parent}.${key}`;
 				const dataType = value === null ? "null" : typeof value;
 				const node: JsonTypeNode = {
 					id: currentNodeId,
 					type: "jsonTypeNode",
 					position: {
-						x: 0,
-						y: 0,
+						x,
+						y: level * 150,
 					},
 					data: {
 						dataType,
-						key,
+						key: newKey,
 						value,
 						numChildren: 0,
 					},
@@ -123,6 +125,8 @@ export function generateTree(data: JsonValue, root: string | null = null) {
 				nodes = [...nodes, node];
 				edges = [...edges, edge];
 			}
+
+			x += 250;
 		}
 	}
 
